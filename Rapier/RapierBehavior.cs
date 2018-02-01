@@ -18,6 +18,8 @@ public class RapierBehavior : MonoBehaviour {
         //Initialize our controller
         input = new ControllerInput();
         input.OpenCommunication("COM4");
+
+        Reset();
     }
 	
 	// Update is called once per frame
@@ -41,6 +43,17 @@ public class RapierBehavior : MonoBehaviour {
 
         //Have the camera follow the sword
         Vector3 swordPos = this.transform.position; //Get position of sword
-        mainCamera.transform.position = new Vector3(swordPos.x, swordPos.y + 0.777f, swordPos.z - 1.376f); //Set the position of the sword
+        mainCamera.transform.position = new Vector3(swordPos.x, swordPos.y + 0.777f, swordPos.z - 1.376f); //Set the position of the camera relative to sword
+    }
+
+    private void Reset()
+    {
+        //Reset transforms
+        rotation = new Vector3(0,0,180);
+        translation = new Vector3(0,0,0);
+
+        //Apply transforms
+        this.transform.Rotate(rotation);
+        this.transform.Translate(translation);
     }
 }

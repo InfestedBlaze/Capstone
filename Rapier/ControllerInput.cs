@@ -38,9 +38,25 @@ public class ControllerInput {
             }
         }
         catch { }
-        
-        //Return the data
-        return transforms;
+
+        //Return the data, after it is sanitized
+        return sanitizeInput(transforms);
+    }
+
+    private float[] sanitizeInput(float[] inputs)
+    {
+        //Sanitize rotation
+        for(int i = 0; i < 3; i++)
+        {
+
+        }
+        //Sanitize translation
+        for (int i = 3; i < 6; i++)
+        {
+
+        }
+
+        return inputs;
     }
 
     //Will close the communication between controller and simulation
