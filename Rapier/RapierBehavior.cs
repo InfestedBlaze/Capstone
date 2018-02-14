@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class RapierBehavior : MonoBehaviour {
 
@@ -26,20 +27,24 @@ public class RapierBehavior : MonoBehaviour {
 	void Update ()
     {
         //Get transforms from controller
-        float[] transforms = input.readData();
+        ControllerData transforms = input.readData();
 
-        foreach(var i in transforms)
-        {
-            Debug.Log(i.ToString());
-        }
+        Debug.Log("Rotation: " + rotation.x + "x : " + rotation.y + "y : " + rotation.z + "z");
+        Debug.Log("Translation: " + translation.x + "x : " + translation.y + "y : " + translation.z + "z");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\DEBUGLOG.txt", transforms[0].ToString() + "\r\n");
 
         //Change transforms
-        rotation    = new Vector3(transforms[0], transforms[1], transforms[2]);
-        translation = new Vector3(transforms[3], transforms[4], transforms[5]);
+        rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
+        rotation.y = (rotation.y - transforms.rotY) % 360;
+        rotation.z = (rotation.z - transforms.rotZ) % 360;
+
+        translation.x += transforms.tranX;
+        translation.y += transforms.tranY;
+        translation.z += transforms.tranZ;
 
         //Apply transforms
-        this.transform.Rotate(rotation);
-        this.transform.Translate(translation);
+        this.transform.rotation = Quaternion.Euler(rotation);
+        //this.transform.position = translation;
 
         //Have the camera follow the sword
         Vector3 swordPos = this.transform.position; //Get position of sword
@@ -49,11 +54,16 @@ public class RapierBehavior : MonoBehaviour {
     private void Reset()
     {
         //Reset transforms
-        rotation = new Vector3(0,0,180);
+        rotation = new Vector3(0,0,180); //180 is so the hand guard is facing down
         translation = new Vector3(0,0,0);
 
         //Apply transforms
-        this.transform.Rotate(rotation);
-        this.transform.Translate(translation);
+        this.transform.eulerAngles = rotation;
+        this.transform.position = translation;
+    }
+
+    private void OnApplicationQuit()
+    {
+        input.CloseCommunication();
     }
 }
