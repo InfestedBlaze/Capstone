@@ -31,7 +31,9 @@ public class RapierBehavior : MonoBehaviour {
 
         Debug.Log("Rotation: " + rotation.x + "x : " + rotation.y + "y : " + rotation.z + "z");
         Debug.Log("Translation: " + translation.x + "x : " + translation.y + "y : " + translation.z + "z");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\DEBUGLOG.txt", transforms[0].ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", Mathf.Abs(transforms.tranX).ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", Mathf.Abs(transforms.tranY).ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", Mathf.Abs(transforms.tranZ).ToString() + "\r\n");
 
         //Change transforms
         rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
