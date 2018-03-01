@@ -19,7 +19,7 @@ public class RapierBehavior : MonoBehaviour {
 
         //Initialize our controller
         input = new ControllerInput();
-        input.OpenCommunication("COM6");
+        input.OpenCommunication("COM4");
 
         Reset();
     }
@@ -41,13 +41,13 @@ public class RapierBehavior : MonoBehaviour {
         File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", Math.Abs(transforms.tranZ).ToString() + "\r\n");
 
         //Change transforms
-        //rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
-        //rotation.y = (rotation.y - transforms.rotY) % 360; //^
-        //rotation.z = (rotation.z - transforms.rotZ) % 360; //^
+        rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
+        rotation.y = (rotation.y - transforms.rotY) % 360; //^
+        rotation.z = (rotation.z - transforms.rotZ) % 360; //^
 
-        //translation.x += transforms.tranX;                 //Add the delta translation to our current translation
-        //translation.y += transforms.tranY;
-        //translation.z += transforms.tranZ;
+        translation.x += transforms.tranX;                 //Add the delta translation to our current translation
+        translation.y += transforms.tranY;
+        translation.z += transforms.tranZ;
 
         //Apply transforms
         this.transform.rotation = Quaternion.Euler(rotation);

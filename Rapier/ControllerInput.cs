@@ -81,7 +81,8 @@ public class ControllerInput {
             }
             catch { }
 
-            return new ControllerData(transforms);
+            //Use this to get raw data
+            //return new ControllerData(transforms);
 
             //Sanitize our input, and put into our running window
             rollingWindow.Enqueue(sanitizeInput(transforms));
@@ -114,42 +115,42 @@ public class ControllerInput {
         }
 
         //We need at least two data points to extrapolate data
-        if(rollingWindow.Count >= 2)
-        {
-            //Get our data points accessible
-            List<ControllerData> rwList = rollingWindow.ToList();
+        //if(rollingWindow.Count >= 2)
+        //{
+        //    //Get our data points accessible
+        //    List<ControllerData> rwList = rollingWindow.ToList();
 
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                //Our input is a bad piece of data, we want to extrapolate a point for it.
-                if (inputs[i] == 0)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            inputs[i] = rwList[1].rotX + rwList[1].rotX - rwList[0].rotX;
-                            break;
-                        case 1:
-                            inputs[i] = rwList[1].rotY + rwList[1].rotY - rwList[0].rotY;
-                            break;
-                        case 2:
-                            inputs[i] = rwList[1].rotZ + rwList[1].rotZ - rwList[0].rotZ;
-                            break;
-                        case 3:
-                            inputs[i] = rwList[1].tranX + rwList[1].tranX - rwList[0].tranX;
-                            break;
-                        case 4:
-                            inputs[i] = rwList[1].tranY + rwList[1].tranY - rwList[0].tranY;
-                            break;
-                        case 5:
-                            inputs[i] = rwList[1].tranZ + rwList[1].tranZ - rwList[0].tranZ;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
+        //    for (int i = 0; i < inputs.Length; i++)
+        //    {
+        //        //Our input is a bad piece of data, we want to extrapolate a point for it.
+        //        if (inputs[i] == 0)
+        //        {
+        //            switch (i)
+        //            {
+        //                case 0:
+        //                    inputs[i] = rwList[1].rotX + rwList[1].rotX - rwList[0].rotX;
+        //                    break;
+        //                case 1:
+        //                    inputs[i] = rwList[1].rotY + rwList[1].rotY - rwList[0].rotY;
+        //                    break;
+        //                case 2:
+        //                    inputs[i] = rwList[1].rotZ + rwList[1].rotZ - rwList[0].rotZ;
+        //                    break;
+        //                case 3:
+        //                    inputs[i] = rwList[1].tranX + rwList[1].tranX - rwList[0].tranX;
+        //                    break;
+        //                case 4:
+        //                    inputs[i] = rwList[1].tranY + rwList[1].tranY - rwList[0].tranY;
+        //                    break;
+        //                case 5:
+        //                    inputs[i] = rwList[1].tranZ + rwList[1].tranZ - rwList[0].tranZ;
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
         
 
         return new ControllerData(inputs);
