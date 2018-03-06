@@ -42,8 +42,8 @@ public class RapierBehavior : MonoBehaviour {
 
         //Change transforms
         rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
-        rotation.y = (rotation.y - transforms.rotY) % 360; //^
-        rotation.z = (rotation.z - transforms.rotZ) % 360; //^
+        rotation.y = (rotation.y - transforms.rotY) % 360;
+        rotation.z = (rotation.z - transforms.rotZ) % 360;
 
         translation.x += transforms.tranX;                 //Add the delta translation to our current translation
         translation.y += transforms.tranY;
