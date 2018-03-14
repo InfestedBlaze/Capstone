@@ -57,13 +57,13 @@ public class ControllerInput {
     private SerialPort _serialPort;
     private Queue<ControllerData> rollingWindow = new Queue<ControllerData>();
     private byte rwSize = 3;
-    public const byte TIMEOUT = 25;
+    public const byte TIMEOUT = 10;
 
 	// Use this for initialization
 	public void OpenCommunication (string COMPort) {
         _serialPort = new SerialPort(COMPort, 115200, Parity.None, 8, StopBits.One);
 
-        // Set the read/write timeouts to 25ms
+        // Set the read/write timeouts to TIMEOUT ms
         _serialPort.ReadTimeout = TIMEOUT;
         _serialPort.WriteTimeout = TIMEOUT;
 
@@ -135,19 +135,19 @@ public class ControllerInput {
                     //Get the specific piece of data needed
                     inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
                 }
-                //We have a difference of greater than 30 from our last point
-                //else if (Math.Abs(rwList[1][i] - inputs[i]) > 30)
-                //{
-                //    //Only +-30 from our last point
-                //    if (inputs[i] < 0)
-                //    {
-                //        inputs[i] = rwList[1][i] - 30;
-                //    }
-                //    else
-                //    {
-                //        inputs[i] = rwList[1][i] + 30;
-                //    }
-                //}
+                //We have a difference of greater than 30 degrees from our last point (rotation only)
+                else if (i < 3 && Math.Abs(rwList[1][i] - inputs[i]) > 30)
+                {
+                    //Only +-30 from our last point
+                    if (inputs[i] < 0)
+                    {
+                        inputs[i] = rwList[1][i] - 30;
+                    }
+                    else
+                    {
+                        inputs[i] = rwList[1][i] + 30;
+                    }
+                }
             }
         }
 
@@ -159,7 +159,7 @@ public class ControllerInput {
             inputs[i] = (inputs[i] * (TIMEOUT / 1000f));
 
             //Set cutoff points for good data
-            if (Math.Abs(inputs[i]) < 0.15f)
+            if (Math.Abs(inputs[i]) < 0.1f)
             {
                 inputs[i] = 0;
             }

@@ -33,12 +33,12 @@ public class RapierBehavior : MonoBehaviour {
         //Can be deleted later
         Debug.Log("Rotation: " + rotation.x + "x : " + rotation.y + "y : " + rotation.z + "z");
         Debug.Log("Translation: " + translation.x + "x : " + translation.y + "y : " + translation.z + "z");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", Math.Abs(transforms.rotX).ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", Math.Abs(transforms.rotY).ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", Math.Abs(transforms.rotZ).ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
 
         //Change transforms
         rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
@@ -47,9 +47,9 @@ public class RapierBehavior : MonoBehaviour {
 
         Vector3 gravity = effectGravity(rotation);
 
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Xgravity.txt", gravity.x.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Ygravity.txt", gravity.y.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Zgravity.txt", gravity.z.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Xgravity.txt", gravity.x.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Ygravity.txt", gravity.y.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Zgravity.txt", gravity.z.ToString() + "\r\n");
 
         translation.x += transforms.tranX - gravity.x;  //Add the delta translation to our current translation
         translation.y += transforms.tranY - gravity.y;  //While also removing gravity from our translation
