@@ -26,6 +26,30 @@ public struct ControllerData
         tranY = data[4];
         tranZ = data[5];
     }
+
+    public float this [int index]
+    {
+        get
+        {
+            switch (index)
+            {
+                case 0:
+                    return rotX;
+                case 1:
+                    return rotY;
+                case 2:
+                    return rotZ;
+                case 3:
+                    return tranX;
+                case 4:
+                    return tranY;
+                case 5:
+                    return tranZ;
+                default:
+                    throw new IndexOutOfRangeException();
+            }
+        }
+    }
 }
 
 public class ControllerInput {
@@ -33,7 +57,7 @@ public class ControllerInput {
     private SerialPort _serialPort;
     private Queue<ControllerData> rollingWindow = new Queue<ControllerData>();
     private byte rwSize = 3;
-    private const byte TIMEOUT = 25;
+    public const byte TIMEOUT = 25;
 
 	// Use this for initialization
 	public void OpenCommunication (string COMPort) {
@@ -109,30 +133,21 @@ public class ControllerInput {
                 if (inputs[i] == 0)
                 {
                     //Get the specific piece of data needed
-                    switch (i)
-                    {
-                        case 0:
-                            inputs[i] = extrapolateData(rwList[0].rotX, rwList[1].rotX);
-                            break;
-                        case 1:
-                            inputs[i] = extrapolateData(rwList[0].rotY, rwList[1].rotY);
-                            break;
-                        case 2:
-                            inputs[i] = extrapolateData(rwList[0].rotZ, rwList[1].rotZ);
-                            break;
-                        case 3:
-                            inputs[i] = extrapolateData(rwList[0].tranX, rwList[1].tranX);
-                            break;
-                        case 4:
-                            inputs[i] = extrapolateData(rwList[0].tranY, rwList[1].tranY);
-                            break;
-                        case 5:
-                            inputs[i] = extrapolateData(rwList[0].tranZ, rwList[1].tranZ);
-                            break;
-                        default:
-                            break;
-                    }
+                    inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
                 }
+                //We have a difference of greater than 30 from our last point
+                //else if (Math.Abs(rwList[1][i] - inputs[i]) > 30)
+                //{
+                //    //Only +-30 from our last point
+                //    if (inputs[i] < 0)
+                //    {
+                //        inputs[i] = rwList[1][i] - 30;
+                //    }
+                //    else
+                //    {
+                //        inputs[i] = rwList[1][i] + 30;
+                //    }
+                //}
             }
         }
 
@@ -140,11 +155,11 @@ public class ControllerInput {
         for (int i = 0; i < 3; i++)
         {
             //Rotation is given in degrees/second
-            //Multiplying by our period gives us degrees
-            inputs[i] = (inputs[i] / TIMEOUT);
+            //dividing by our period in seconds gives us degrees
+            inputs[i] = (inputs[i] * (TIMEOUT / 1000f));
 
             //Set cutoff points for good data
-            if (Math.Abs(inputs[i]) < 0.3f)
+            if (Math.Abs(inputs[i]) < 0.15f)
             {
                 inputs[i] = 0;
             }
@@ -157,12 +172,12 @@ public class ControllerInput {
         for (int i = 3; i < 6; i++)
         {
             //Turn acceleration into displacement. (a * t^2 / 2)
-            inputs[i] = inputs[i] * (0.01f * 0.01f) / 2; //input(m/s^2) * 10(ms)^2 /2 = input(m)
+            inputs[i] = inputs[i] * (float)Math.Pow((TIMEOUT / 1000f), 2) / 2; //input(m/s^2) * 25(ms)^2 /2 = input(m)
         }
         
         return new ControllerData(inputs);
     }
-
+    
     private float extrapolateData(float arg1, float arg2)
     {
         //Assume a linear line, add the difference of (1, 2) back onto 2
