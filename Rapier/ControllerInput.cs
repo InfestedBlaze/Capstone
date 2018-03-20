@@ -132,21 +132,27 @@ public class ControllerInput {
                 //Our input is a bad piece of data, we want to extrapolate a point for it.
                 if (inputs[i] == 0)
                 {
-                    //Get the specific piece of data needed
+                    //Get the specific piece of data needed, in degrees
                     inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
+
+                    //Convert back to degrees per second
+                    inputs[i] /= (TIMEOUT / 1000f);
                 }
-                //We have a difference of greater than 30 degrees from our last point (rotation only)
-                else if (i < 3 && Math.Abs(rwList[1][i] - inputs[i]) > 30)
+                //We have a difference of greater than 10 degrees from our last point (rotation only)
+                else if (i < 3 && Math.Abs(rwList[1][i] - (inputs[i] * (TIMEOUT / 1000f))) > 10)
                 {
                     //Only +-30 from our last point
                     if (inputs[i] < 0)
                     {
-                        inputs[i] = rwList[1][i] - 30;
+                        inputs[i] = rwList[1][i] - 10;
                     }
                     else
                     {
-                        inputs[i] = rwList[1][i] + 30;
+                        inputs[i] = rwList[1][i] + 10;
                     }
+
+                    //Convert back to degrees per second
+                    inputs[i] /= (TIMEOUT / 1000f);
                 }
             }
         }
