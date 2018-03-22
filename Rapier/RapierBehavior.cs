@@ -33,9 +33,9 @@ public class RapierBehavior : MonoBehaviour {
         //Can be deleted later
         Debug.Log("Rotation: " + rotation.x + "x : " + rotation.y + "y : " + rotation.z + "z");
         Debug.Log("Translation: " + translation.x + "x : " + translation.y + "y : " + translation.z + "z");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
@@ -45,19 +45,15 @@ public class RapierBehavior : MonoBehaviour {
         rotation.y = (rotation.y - transforms.rotY) % 360;
         rotation.z = (rotation.z - transforms.rotZ) % 360;
 
-        Vector3 gravity = effectGravity(rotation);
-
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Xgravity.txt", gravity.x.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Ygravity.txt", gravity.y.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\Zgravity.txt", gravity.z.ToString() + "\r\n");
-
-        translation.x += transforms.tranX - gravity.x;  //Add the delta translation to our current translation
-        translation.y += transforms.tranY - gravity.y;  //While also removing gravity from our translation
-        translation.z += transforms.tranZ - gravity.z;
+        translation.x += transforms.tranX;  //Add the delta translation to our current translation
+        translation.y += transforms.tranY;  
+        translation.z += transforms.tranZ;
 
         //Apply transforms
         this.transform.rotation = Quaternion.Euler(rotation);
         this.transform.position = translation;
+        //Remove gravity from our position
+        this.transform.Translate(0, 0, 0.0004905f, Space.World);
 
         //Have the camera follow the sword
         Vector3 swordPos = this.transform.position; //Get position of sword
@@ -78,25 +74,5 @@ public class RapierBehavior : MonoBehaviour {
     private void OnApplicationQuit()
     {
         input.CloseCommunication();
-    }
-
-    private Vector3 effectGravity(Vector3 orientation)
-    {
-        //0.003065625 is displacement due to gravity
-
-        Vector3 gravity = new Vector3();
-        //X effect of gravity
-        gravity.x = -(9.81f) * (float)Math.Sin(orientation.y);
-        //Y effect of gravity
-        gravity.y =  (9.81f) * (float)Math.Cos(orientation.y) * (float)Math.Sin(orientation.z);
-        //Z effect of gravity
-        gravity.z =  (9.81f) * (float)Math.Cos(orientation.y) * (float)Math.Cos(orientation.z);
-
-        //Acceleration to displacement conversion. a * t^2 / 2
-        gravity.x = gravity.x * (float)Math.Pow((ControllerInput.TIMEOUT / 1000f), 2) / 2;
-        gravity.y = gravity.y * (float)Math.Pow((ControllerInput.TIMEOUT / 1000f), 2) / 2;
-        gravity.z = gravity.z * (float)Math.Pow((ControllerInput.TIMEOUT / 1000f), 2) / 2;
-
-        return gravity;
     }
 }

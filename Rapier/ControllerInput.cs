@@ -106,9 +106,6 @@ public class ControllerInput {
             }
             catch { }
 
-            //Use this to get raw data
-            //return new ControllerData(transforms);
-
             //Sanitize our input, and put into our running window
             rollingWindow.Enqueue(sanitizeInput(transforms));
 
@@ -180,8 +177,10 @@ public class ControllerInput {
             //Turn acceleration into displacement. (a * t^2 / 2)
             inputs[i] = inputs[i] * (float)Math.Pow((TIMEOUT / 1000f), 2) / 2; //input(m/s^2) * 25(ms)^2 /2 = input(m)
         }
-        
-        return new ControllerData(inputs);
+
+        //NOTE: The inputs are put in individually to account for our controller orientation.
+        //The ordering is important to our design of the controller. Do not change unless you understand.
+        return new ControllerData(inputs[0], inputs[2], inputs[1], inputs[5], inputs[3], inputs[4]); 
     }
     
     private float extrapolateData(float arg1, float arg2)
