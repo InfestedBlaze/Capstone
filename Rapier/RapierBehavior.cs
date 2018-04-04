@@ -19,7 +19,7 @@ public class RapierBehavior : MonoBehaviour {
 
         //Initialize our controller
         input = new ControllerInput();
-        input.OpenCommunication("COM4");
+        input.OpenCommunication();
 
         Reset();
     }
@@ -33,12 +33,12 @@ public class RapierBehavior : MonoBehaviour {
         //Can be deleted later
         Debug.Log("Rotation: " + rotation.x + "x : " + rotation.y + "y : " + rotation.z + "z");
         Debug.Log("Translation: " + translation.x + "x : " + translation.y + "y : " + translation.z + "z");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
-        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
+        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
 
         //Change transforms
         rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
@@ -48,6 +48,10 @@ public class RapierBehavior : MonoBehaviour {
         translation.x += transforms.tranX;  //Add the delta translation to our current translation
         translation.y += transforms.tranY;  
         translation.z += transforms.tranZ;
+
+        translation.x %= 10;    //Don't let the translation go too far
+        translation.y %= 10;
+        translation.z %= 10;
 
         //Apply transforms
         this.transform.rotation = Quaternion.Euler(rotation);

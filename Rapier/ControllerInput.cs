@@ -60,8 +60,8 @@ public class ControllerInput {
     public const byte TIMEOUT = 10;
 
 	// Use this for initialization
-	public void OpenCommunication (string COMPort) {
-        _serialPort = new SerialPort(COMPort, 115200, Parity.None, 8, StopBits.One);
+	public void OpenCommunication () {
+        _serialPort = new SerialPort("COM5", 115200, Parity.None, 8, StopBits.One);
 
         // Set the read/write timeouts to TIMEOUT ms
         _serialPort.ReadTimeout = TIMEOUT;
@@ -105,6 +105,8 @@ public class ControllerInput {
                 }
             }
             catch { }
+
+            return new ControllerData(transforms); //TEST CODE REMOVE
 
             //Sanitize our input, and put into our running window
             rollingWindow.Enqueue(sanitizeInput(transforms));
@@ -188,7 +190,8 @@ public class ControllerInput {
 
         //NOTE: The inputs are put in individually to account for our controller orientation.
         //The ordering is important to our design of the controller. Do not change unless you understand.
-        return new ControllerData(inputs[0], inputs[2], inputs[1], inputs[5], inputs[3], inputs[4]); 
+        //return new ControllerData(inputs[0], inputs[2], inputs[1], inputs[5], inputs[3], inputs[4]); 
+        return new ControllerData(inputs);//TEST CODE REMOVE
     }
     
     private float extrapolateData(float arg1, float arg2)
