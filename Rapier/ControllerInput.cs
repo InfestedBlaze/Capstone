@@ -61,7 +61,7 @@ public class ControllerInput {
 
 	// Use this for initialization
 	public void OpenCommunication () {
-        _serialPort = new SerialPort("COM5", 115200, Parity.None, 8, StopBits.One);
+        _serialPort = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
 
         // Set the read/write timeouts to TIMEOUT ms
         _serialPort.ReadTimeout = TIMEOUT;
@@ -69,6 +69,13 @@ public class ControllerInput {
 
         //Open the communication between devices
         _serialPort.Open();
+
+        _serialPort.ErrorReceived += _serialPort_ErrorReceived;
+    }
+
+    private void _serialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+    {
+        
     }
 
     //Will read in the values of our controller
@@ -101,7 +108,14 @@ public class ControllerInput {
                 //Parse the data as a float
                 for (int i = 0; i < 6; i++)
                 {
-                    transforms[i] = float.Parse(individualVals[i]);
+                    try
+                    {
+                        transforms[i] = float.Parse(individualVals[i]);
+                    }
+                    catch
+                    {
+                        transforms[i] = 0;
+                    }
                 }
             }
             catch { }
