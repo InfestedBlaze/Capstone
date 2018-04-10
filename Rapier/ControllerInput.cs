@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.IO;
 
 public struct ControllerData
 {
@@ -61,7 +62,7 @@ public class ControllerInput {
 
 	// Use this for initialization
 	public void OpenCommunication () {
-        _serialPort = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
+        _serialPort = new SerialPort("COM5", 115200, Parity.None, 8, StopBits.One);
 
         // Set the read/write timeouts to TIMEOUT ms
         _serialPort.ReadTimeout = TIMEOUT;
@@ -69,13 +70,6 @@ public class ControllerInput {
 
         //Open the communication between devices
         _serialPort.Open();
-
-        _serialPort.ErrorReceived += _serialPort_ErrorReceived;
-    }
-
-    private void _serialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
-    {
-        
     }
 
     //Will read in the values of our controller
@@ -105,6 +99,14 @@ public class ControllerInput {
                 string input = _serialPort.ReadLine();
                 string[] individualVals = input.Trim().Split(new char[] { ',' });
 
+                for (int i = 0; i < individualVals.Length; i++)
+                {
+                    if (!individualVals[i].Contains(".") || individualVals.Length < 6)
+                    {
+                        individualVals = new string[] { "0", "0", "0", "0", "0", "0" };
+                    }
+                }
+
                 //Parse the data as a float
                 for (int i = 0; i < 6; i++)
                 {
@@ -119,8 +121,6 @@ public class ControllerInput {
                 }
             }
             catch { }
-
-            return new ControllerData(transforms); //TEST CODE REMOVE
 
             //Sanitize our input, and put into our running window
             rollingWindow.Enqueue(sanitizeInput(transforms));
@@ -146,7 +146,7 @@ public class ControllerInput {
                 if (inputs[i] == 0)
                 {
                     //Get the specific piece of data needed, extrapolated from previous points
-                    inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
+                    //inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
 
                     if (i < 3) //We are changing rotation
                     {
@@ -204,8 +204,7 @@ public class ControllerInput {
 
         //NOTE: The inputs are put in individually to account for our controller orientation.
         //The ordering is important to our design of the controller. Do not change unless you understand.
-        //return new ControllerData(inputs[0], inputs[2], inputs[1], inputs[5], inputs[3], inputs[4]); 
-        return new ControllerData(inputs);//TEST CODE REMOVE
+        return new ControllerData(-inputs[2], inputs[0], -inputs[1], inputs[5], inputs[3], inputs[4]);
     }
     
     private float extrapolateData(float arg1, float arg2)
