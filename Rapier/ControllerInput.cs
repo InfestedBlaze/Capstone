@@ -135,55 +135,54 @@ public class ControllerInput {
     private ControllerData sanitizeInput(float[] inputs)
     {
         //We need at least two data points to extrapolate data
-        if (rollingWindow.Count >= 2)
-        {
-            //Get our data points accessible
-            List<ControllerData> rwList = rollingWindow.ToList();
+        //if (rollingWindow.Count >= 2)
+        //{
+        //    //Get our data points accessible
+        //    List<ControllerData> rwList = rollingWindow.ToList();
 
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                //Our input is a bad piece of data, we want to extrapolate a point for it.
-                if (inputs[i] == 0)
-                {
-                    //Get the specific piece of data needed, extrapolated from previous points
-                    inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
+        //    for (int i = 0; i < inputs.Length; i++)
+        //    {
+        //        //Our input is a bad piece of data, we want to extrapolate a point for it.
+        //        if (inputs[i] == 0)
+        //        {
+        //            //Get the specific piece of data needed, extrapolated from previous points
+        //            inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
 
-                    if (i < 3) //We are changing rotation
-                    {
-                        //Convert back to degrees per second from degrees
-                        inputs[i] /= (TIMEOUT / 1000f);
-                    }
-                    else //We are changing displacement
-                    {
-                        //Convert back to acceleration from displacement
-                        inputs[i] = inputs[i] * 2 / (float)Math.Pow((TIMEOUT / 1000f), 2);
-                    }
-                }
-                //We have a difference of greater than 10 degrees from our last point (rotation only)
-                else if (i < 3 && Math.Abs(rwList[1][i] - (inputs[i] * (TIMEOUT / 1000f))) > 10)
-                {
-                    //Only +-10 from our last point
-                    if (inputs[i] < 0)
-                    {
-                        inputs[i] = rwList[1][i] - 10;
-                    }
-                    else
-                    {
-                        inputs[i] = rwList[1][i] + 10;
-                    }
+        //            if (i < 3) //We are changing rotation
+        //            {
+        //                //Convert back to degrees per second from degrees
+        //                inputs[i] = DegreesTod_s(inputs[i]);
+        //            }
+        //            else //We are changing displacement
+        //            {
+        //                //Convert back to acceleration from displacement
+        //                inputs[i] = DisplaceToAccel(inputs[i]);
+        //            }
+        //        }
+        //        //We have a difference of greater than 10 degrees from our last point (rotation only)
+        //        else if (i < 3 && Math.Abs(rwList[1][i] - (inputs[i] * (TIMEOUT / 1000f))) > 10)
+        //        {
+        //            //Only +-10 from our last point
+        //            if (inputs[i] > 0)
+        //            {
+        //                inputs[i] = rwList[1][i] - 10;
+        //            }
+        //            else
+        //            {
+        //                inputs[i] = rwList[1][i] + 10;
+        //            }
 
-                    //Convert back to degrees per second
-                    inputs[i] /= (TIMEOUT / 1000f);
-                }
-            }
-        }
+        //            //Convert back to degrees per second
+        //            inputs[i] = DegreesTod_s(inputs[i]);
+        //        }
+        //    }
+        //}
 
         //Sanitize rotation
         for (int i = 0; i < 3; i++)
         {
-            //Rotation is given in degrees/second
-            //dividing by our period in seconds gives us degrees
-            inputs[i] = (inputs[i] * (TIMEOUT / 1000f));
+            //Rotation is given in degrees/second, needed in degrees
+            inputs[i] = d_sToDegrees(inputs[i]);
 
             //Set cutoff points for good data
             if (Math.Abs(inputs[i]) < 0.1f)
@@ -198,8 +197,8 @@ public class ControllerInput {
         //Sanitize translation
         for (int i = 3; i < 6; i++)
         {
-            //Turn acceleration into displacement. (a * t^2 / 2)
-            inputs[i] = inputs[i] * (float)Math.Pow((TIMEOUT / 1000f), 2) / 2; //input(m/s^2) * 25(ms)^2 /2 = input(m)
+            //Turn acceleration into displacement.
+            inputs[i] = AccelToDisplace(inputs[i]);
         }
 
         //NOTE: The inputs are put in individually to account for our controller orientation.
@@ -221,5 +220,27 @@ public class ControllerInput {
         {
             _serialPort.Close();
         }
+    }
+
+
+    //Conversion functions
+    private float d_sToDegrees(float d_s)
+    {
+        return d_s * (TIMEOUT / 1000f);
+    }
+
+    private float DegreesTod_s(float Degrees)
+    {
+        return Degrees / (TIMEOUT / 1000f);
+    }
+
+    private float AccelToDisplace(float Accel)
+    {
+        return Accel * (float)Math.Pow((TIMEOUT / 1000f), 2) / 2; //Accel(m/s^2) * TIMEOUT(ms)^2 /2 = input(m)
+    }
+
+    private float DisplaceToAccel(float Displace)
+    {
+        return Displace * 2 / (float)Math.Pow((TIMEOUT / 1000f), 2);
     }
 }
