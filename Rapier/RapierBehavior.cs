@@ -41,9 +41,9 @@ public class RapierBehavior : MonoBehaviour {
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XRotation.txt", transforms.rotX.ToString() + "\r\n");
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YRotation.txt", transforms.rotY.ToString() + "\r\n");
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZRotation.txt", transforms.rotZ.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
-        File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\XTranslation.txt", transforms.tranX.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\YTranslation.txt", transforms.tranY.ToString() + "\r\n");
+        //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
 
         //Change transforms
         rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360

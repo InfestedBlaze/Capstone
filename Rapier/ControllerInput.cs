@@ -99,28 +99,28 @@ public class ControllerInput {
                 string input = _serialPort.ReadLine();
                 string[] individualVals = input.Trim().Split(new char[] { ',' });
 
+                //Make sure we haven't gotten our values in wrong
                 for (int i = 0; i < individualVals.Length; i++)
                 {
+                    //Must have a decimal, must have gotten 6 pieces of data
                     if (!individualVals[i].Contains(".") || individualVals.Length < 6)
                     {
-                        individualVals = new string[] { "0", "0", "0", "0", "0", "0" };
+                        //Bad data, zero everything
+                        throw new Exception();
                     }
                 }
 
                 //Parse the data as a float
                 for (int i = 0; i < 6; i++)
                 {
-                    try
-                    {
-                        transforms[i] = float.Parse(individualVals[i]);
-                    }
-                    catch
-                    {
-                        transforms[i] = 0;
-                    }
+                    transforms[i] = float.Parse(individualVals[i]);
                 }
             }
-            catch { }
+            catch
+            {
+                //error occurred when receiving data, zero it all 
+                transforms = new float[] { 0, 0, 0, 0, 0, 0 };
+            }
 
             //Sanitize our input, and put into our running window
             rollingWindow.Enqueue(sanitizeInput(transforms));
@@ -146,7 +146,7 @@ public class ControllerInput {
                 if (inputs[i] == 0)
                 {
                     //Get the specific piece of data needed, extrapolated from previous points
-                    //inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
+                    inputs[i] = extrapolateData(rwList[0][i], rwList[1][i]);
 
                     if (i < 3) //We are changing rotation
                     {
