@@ -57,7 +57,7 @@ public class ControllerInput {
     
     private SerialPort _serialPort;
     private Queue<ControllerData> rollingWindow = new Queue<ControllerData>();
-    private byte rwSize = 3;
+    private byte rwSize = 1;
     public const byte TIMEOUT = 10;
 
 	// Use this for initialization
@@ -203,7 +203,7 @@ public class ControllerInput {
 
         //NOTE: The inputs are put in individually to account for our controller orientation.
         //The ordering is important to our design of the controller. Do not change unless you understand.
-        return new ControllerData(-inputs[2], inputs[0], -inputs[1], inputs[5], inputs[3], inputs[4]);
+        return new ControllerData(-inputs[2], inputs[0], -inputs[1], inputs[5], -inputs[3], inputs[4]);
     }
     
     private float extrapolateData(float arg1, float arg2)

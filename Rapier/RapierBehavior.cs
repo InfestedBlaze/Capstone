@@ -27,6 +27,7 @@ public class RapierBehavior : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        //If you press space, reset the orientation
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Reset();
@@ -46,9 +47,9 @@ public class RapierBehavior : MonoBehaviour {
         //File.AppendAllText(@"C:\Users\nwasylyshyn1\Desktop\ZTranslation.txt", transforms.tranZ.ToString() + "\r\n");
 
         //Change transforms
-        rotation.x = (rotation.x + transforms.rotX) % 360; //Add the rotation to our current rotation. Don't go above 360
-        rotation.y = (rotation.y - transforms.rotY) % 360;
-        rotation.z = (rotation.z - transforms.rotZ) % 360;
+        rotation.x = (rotation.x + transforms.rotX * 2) % 360; //Add the rotation to our current rotation. Don't go above 360
+        rotation.y = (rotation.y - transforms.rotY * 2) % 360;
+        rotation.z = (rotation.z - transforms.rotZ * 2) % 360;
 
         translation.x += transforms.tranX;  //Add the delta translation to our current translation
         translation.y += transforms.tranY;  
@@ -62,7 +63,7 @@ public class RapierBehavior : MonoBehaviour {
         this.transform.rotation = Quaternion.Euler(rotation);
         this.transform.position = translation;
         //Remove gravity from our position
-        this.transform.Translate(0, 0, 0.0004905f, Space.World);
+        this.transform.Translate(0, -0.0004905f, 0, Space.World);
 
         //Have the camera follow the sword
         Vector3 swordPos = this.transform.position; //Get position of sword
