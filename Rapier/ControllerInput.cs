@@ -198,7 +198,7 @@ public class ControllerInput {
         for (int i = 3; i < 6; i++)
         {
             //Turn acceleration into displacement.
-            inputs[i] = AccelToDisplace(inputs[i]);
+            inputs[i] = AccelToDisplace(inputs[i] * 9.81f);
         }
 
         //NOTE: The inputs are put in individually to account for our controller orientation.
